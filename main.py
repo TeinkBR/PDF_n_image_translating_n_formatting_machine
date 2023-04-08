@@ -28,6 +28,8 @@ def main():
     parser.add_argument("--crnn-model", type=str, help="Path to the CRNN model.")
     parser.add_argument("--dpi", type=int, help="DPI of the output images.")
     parser.add_argument("--target-language", type=str, help="Target language code for translation.")
+    parser.add_argument("--beam-width", type=int, help="Beam width for translation.")
+    parser.add_argument("--length-penalty", type=float, help="Length penalty for translation.")
     args = parser.parse_args()
 
     # Load settings from the configuration file
@@ -42,6 +44,8 @@ def main():
     crnn_model_path = args.crnn_model or config["crnn_model_path"]
     dpi = args.dpi or config["dpi"]
     target_language = args.target_language or config["target_language"]
+    beam_width = args.beam_width or config["beam_width"]
+    length_penalty = args.length_penalty or config["length_penalty"]
 
     # Load the trained translation model, CRAFT model, and CRNN model
     try:
@@ -66,18 +70,9 @@ def main():
 
     # Translate the extracted texts using the pre-trained model
     try:
-        translated_texts = pdf_utils.translate_texts(texts, model, target_language)
+        translated_texts = pdf_utils.translate_texts(texts, model, target_language, beam_width, length_penalty)
     except Exception as e:
         logging.error(f"Error: {e}")
         return
 
-    # Generate a new PDF with the translated text in the same format as the original PDF
-    try:
-        pdf_utils.create_translated_pdf(layout_data, translated_texts, output_pdf_path)
-    except Exception as e:
-        logging.error(f"Error: {e}")
-        return
-
-
-if __name__ == "__main__":
-    main()
+    # Generate a new PDF with the translated text in the same
