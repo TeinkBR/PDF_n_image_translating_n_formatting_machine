@@ -5,6 +5,7 @@ from pdfminer.layout import LAParams
 from pdfminer.converter import PDFPageAggregator
 from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 from pdfminer.pdfpage import PDFPage
+from reportlab.pdfgen import canvas
 
 
 def pdf_to_images(pdf_path):
@@ -45,3 +46,21 @@ def extract_layout(pdf_path):
             layout_data.append(layout)
 
     return layout_data
+
+
+def create_translated_pdf(layout_data, translated_texts, output_path):
+    """Generates a new PDF with the translated text in the same format as the original PDF using reportlab."""
+    c = canvas.Canvas(output_path)
+
+    # Use layout_data to position and format the translated text
+    for i, layout in enumerate(layout_data):
+        for textbox in layout:
+            x, y, w, h = textbox.bbox
+            font_size = textbox.size
+            # Use the same font as the original text
+            font_name = textbox.fontname
+            c.setFont(font_name, font_size)
+            # Draw the translated text in the same position as the original text
+            c.drawString(x, y, translated_texts[i])
+
+    c.save()
