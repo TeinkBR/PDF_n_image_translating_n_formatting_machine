@@ -5,12 +5,16 @@ from pdfminer.converter import PDFPageAggregator
 from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 from pdfminer.pdfpage import PDFPage
 from reportlab.pdfgen import canvas
-
 import deep_ocr
 import os
+import logging
 
 def create_translated_pdf(layout_data, translated_texts, output_path):
     """Generates a new PDF with the translated text in the same format as the original PDF using reportlab."""
+    if len(layout_data) != len(translated_texts):
+        logging.error("Mismatch between number of text boxes and translated texts.")
+        return
+    
     c = canvas.Canvas(output_path)
 
     # Use layout_data to position and format the translated text
@@ -56,7 +60,7 @@ def extract_layout(pdf_path):
                 layout = device.get_result()
                 layout_data.append(layout)
     except FileNotFoundError:
-        print(f"Error: File {pdf_path} not found.")
+        logging.error(f"Input PDF file {pdf_path} not found.")
         return []
 
     return layout_data
@@ -65,8 +69,8 @@ def pdf_to_images(pdf_path):
     """Converts a PDF file to a list of PIL Image objects."""
     try:
         images = convert_from_path(pdf_path)
-    except FileNotFoundError:
-        print(f"Error: File {pdf_path} not found.")
+    except pdf2image.exceptions.PDFPageCountError:
+        logging.error(f"Error converting {pdf_path} to images.")
         return []
 
     return images
