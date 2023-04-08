@@ -1,5 +1,6 @@
 from pdf2image import convert_from_path
 from PIL import Image
+import pytesseract
 
 
 def pdf_to_images(pdf_path):
@@ -15,3 +16,9 @@ def preprocess_image(image):
     image = image.resize((800, 800))
     # Apply other preprocessing steps here, e.g., thresholding, denoising, etc.
     return image
+
+
+def image_to_text(image):
+    """Extracts text from a PIL Image object using OCR."""
+    text = pytesseract.image_to_string(image)
+    return text
