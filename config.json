@@ -1,0 +1,8 @@
+{
+  "input_pdf_path": "path/to/input.pdf",
+  "output_pdf_path": "path/to/output.pdf",
+  "model_path": "path/to/translation_model.pt",
+  "craft_model_path": "path/to/craft_model.pt",
+  "crnn_model_path": "path/to/crnn_model.pt",
+  "dpi": 300
+}
