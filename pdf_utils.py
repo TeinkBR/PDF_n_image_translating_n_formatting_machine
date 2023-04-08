@@ -23,10 +23,13 @@ def preprocess_image(image):
     return image
 
 
-def image_to_text(image):
-    """Extracts text from a PIL Image object using OCR."""
-    text = pytesseract.image_to_string(image)
+import deep_ocr
+
+def image_to_text(image, craft_model, crnn_model):
+    """Extracts text from a PIL Image object using deep learning OCR."""
+    text = deep_ocr.deep_ocr(image, craft_model, crnn_model)
     return text
+
 
 
 def extract_layout(pdf_path):
