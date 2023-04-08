@@ -36,6 +36,5 @@ def main():
     # Generate a new PDF with the translated text in the same format as the original PDF
     pdf_utils.create_translated_pdf(layout_data, translated_texts, output_path)
 
-
 if __name__ == "__main__":
     main()
