@@ -8,9 +8,25 @@ from pdfminer.pdfpage import PDFPage
 from reportlab.pdfgen import canvas
 
 
-def pdf_to_images(pdf_path):
-    """Converts a PDF file to a list of PIL Image objects."""
-    return convert_from_path(pdf_path)
+def create_translated_pdf(layout_data, translated_texts, output_path):
+    """Generates a new PDF with the translated text in the same format as the original PDF using reportlab."""
+    c = canvas.Canvas(output_path)
+
+    # Use layout_data to position and format the translated text
+    for translated_text, layout in zip(translated_texts, layout_data):
+        for textbox in layout:
+            if isinstance(textbox, LTTextBox):
+                x, y, w, h = textbox.bbox
+                font_size = textbox.get_text().split('\n')[0].size
+                font_name = textbox.get_text().split('\n')[0].fontname
+                c.setFont(font_name, font_size)
+
+                # Draw the translated text in the same position as the original text
+                for line, (x, y) in zip(translated_text.split('\n'), textbox.get_lines_positions()):
+                    c.drawString(x, y, line)
+
+    c.save()
+
 
 
 def preprocess_image(image):
