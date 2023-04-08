@@ -1,6 +1,6 @@
 import pdf_utils
 import opennmt
-
+import deep_ocr
 
 def main():
     # Paths to input and output PDF files
@@ -10,6 +10,10 @@ def main():
     # Load the trained translation model
     model = opennmt.load_model("path/to/your/trained/model")
 
+    # Load the pre-trained CRAFT and CRNN models
+    craft_model = deep_ocr.load_craft_model("path/to/your/craft/model")
+    crnn_model = deep_ocr.load_crnn_model("path/to/your/crnn/model")
+
     # Convert the PDF file to a list of preprocessed images and extract layout information
     images = pdf_utils.pdf_to_images(pdf_path)
     layout_data = pdf_utils.extract_layout(pdf_path)
@@ -18,7 +22,7 @@ def main():
     translated_texts = []
     for image in images:
         preprocessed_image = pdf_utils.preprocess_image(image)
-        text = pdf_utils.image_to_text(preprocessed_image)
+        text = pdf_utils.image_to_text(preprocessed_image, craft_model, crnn_model)
         translated_text = pdf_utils.translate_text(text, model)
         translated_texts.append(translated_text)
 
@@ -28,6 +32,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-    
- ## update 
