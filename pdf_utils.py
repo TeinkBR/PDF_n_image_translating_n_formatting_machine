@@ -9,7 +9,6 @@ from reportlab.pdfgen import canvas
 import deep_ocr
 import os
 
-
 def create_translated_pdf(layout_data, translated_texts, output_path):
     """Generates a new PDF with the translated text in the same format as the original PDF using reportlab."""
     c = canvas.Canvas(output_path)
@@ -27,7 +26,6 @@ def create_translated_pdf(layout_data, translated_texts, output_path):
 
     c.save()
 
-
 def preprocess_image(image):
     """Preprocesses a PIL Image object for OCR."""
     # Convert the image to grayscale
@@ -37,12 +35,10 @@ def preprocess_image(image):
     # Apply other preprocessing steps here, e.g., thresholding, denoising, etc.
     return image
 
-
 def image_to_text(image, craft_model, crnn_model):
     """Extracts text from a PIL Image object using deep learning OCR."""
     text = deep_ocr.deep_ocr(image, craft_model, crnn_model)
     return text
-
 
 def extract_layout(pdf_path):
     """Extracts layout information (position, font size, etc.) from a PDF file using pdfminer."""
@@ -64,7 +60,6 @@ def extract_layout(pdf_path):
         return []
 
     return layout_data
-
 
 def pdf_to_images(pdf_path):
     """Converts a PDF file to a list of PIL Image objects."""
