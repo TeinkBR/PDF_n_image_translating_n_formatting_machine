@@ -6,9 +6,9 @@ To use PDF Translator, you will need to have Python 3.x and pip installed on you
 
 # Install with pip
 You can install PDF Translator using pip:
-'
+'''python
 pip install pdf-translator
-'
+'''
 
 # Install from source
 To install PDF Translator from source, you can clone the GitHub repository:
