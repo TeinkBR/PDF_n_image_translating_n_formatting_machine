@@ -1,76 +1,40 @@
-from pdf2image import convert_from_path
+import cv2
+import pytesseract
 from PIL import Image
-from pdfminer.layout import LAParams, LTTextBox
-from pdfminer.converter import PDFPageAggregator
-from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
-from pdfminer.pdfpage import PDFPage
-from reportlab.pdfgen import canvas
-import deep_ocr
-import os
-import logging
+import numpy as np
+from pdf2image import convert_from_path
+import pdfminer
+from pdfminer.high_level import extract_pages
+from pdfminer.layout import LTTextBoxHorizontal
+import opennmt
 
-def create_translated_pdf(layout_data, translated_texts, output_path):
-    """Generates a new PDF with the translated text in the same format as the original PDF using reportlab."""
-    if len(layout_data) != len(translated_texts):
-        logging.error("Mismatch between number of text boxes and translated texts.")
-        return
-    
-    c = canvas.Canvas(output_path)
-
-    # Use layout_data to position and format the translated text
-    for i, layout in enumerate(layout_data):
-        for textbox in layout:
-            if isinstance(textbox, LTTextBox):
-                x, y, w, h = textbox.bbox
-                font_size = textbox.get_text().split('\n')[0].size
-                font_name = textbox.get_text().split('\n')[0].fontname
-                c.setFont(font_name, font_size)
-                # Draw the translated text in the same position as the original text
-                c.drawString(x, y, translated_texts[i])
-
-    c.save()
+def pdf_to_images(pdf_path, dpi):
+    return convert_from_path(pdf_path, dpi)
 
 def preprocess_image(image):
-    """Preprocesses a PIL Image object for OCR."""
-    # Convert the image to grayscale
-    image = image.convert('L')
-    # Resize the image to a smaller size (e.g., 800x800)
-    image = image.resize((800, 800))
-    # Apply other preprocessing steps here, e.g., thresholding, denoising, etc.
-    return image
+    img = np.array(image)
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    _, thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    return thresh
 
-def image_to_text(image, craft_model, crnn_model):
-    """Extracts text from a PIL Image object using deep learning OCR."""
-    text = deep_ocr.deep_ocr(image, craft_model, crnn_model)
+def image_to_text(image, _craft_model=None, _crnn_model=None):
+    img = Image.fromarray(image)
+    text = pytesseract.image_to_string(img, lang='eng')
     return text
 
 def extract_layout(pdf_path):
-    """Extracts layout information (position, font size, etc.) from a PDF file using pdfminer."""
-    resource_manager = PDFResourceManager()
-    laparams = LAParams()
-    device = PDFPageAggregator(resource_manager, laparams=laparams)
-    interpreter = PDFPageInterpreter(resource_manager, device)
-
     layout_data = []
-
-    try:
-        with open(pdf_path, "rb") as f:
-            for page in PDFPage.get_pages(f):
-                interpreter.process_page(page)
-                layout = device.get_result()
-                layout_data.append(layout)
-    except FileNotFoundError:
-        logging.error(f"Input PDF file {pdf_path} not found.")
-        return []
-
+    for page_layout in extract_pages(pdf_path):
+        layout_page = []
+        for element in page_layout:
+            if isinstance(element, LTTextBoxHorizontal):
+                layout_page.append(element)
+        layout_data.append(layout_page)
     return layout_data
 
-def pdf_to_images(pdf_path):
-    """Converts a PDF file to a list of PIL Image objects."""
-    try:
-        images = convert_from_path(pdf_path)
-    except pdf2image.exceptions.PDFPageCountError:
-        logging.error(f"Error converting {pdf_path} to images.")
-        return []
-
-    return images
+def translate_texts(texts, model, target_language, beam_width, length_penalty):
+    translations = []
+    for text in texts:
+        translation = opennmt.translate(text, model, target_language, beam_width, length_penalty)
+        translations.append(translation)
+    return translations
