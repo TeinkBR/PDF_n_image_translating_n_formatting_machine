@@ -6,15 +6,15 @@ To use PDF Translator, you will need to have Python 3.x and pip installed on you
 
 # Install with pip
 You can install PDF Translator using pip:
+
 ```hs
--- Point-free style
 pip install pdf-translator
 '''
 
 # Install from source
 To install PDF Translator from source, you can clone the GitHub repository:
+
 ```hs
--- Point-free style
 git clone https://github.com/yourusername/pdf_translator.git
 cd pdf_translator
 pip install -r requirements.txt
@@ -25,7 +25,6 @@ python setup.py install
 # Command-line arguments
 PDF Translator can be run from the command line using the pdf_translator command. It accepts the following command-line arguments:
 ```hs
--- Point-free style
 usage: pdf_translator [-h] [--config CONFIG] [--input INPUT] [--output OUTPUT]
                       [--model MODEL] [--craft-model CRAFT_MODEL]
                       [--crnn-model CRNN_MODEL] [--dpi DPI]
@@ -58,8 +57,8 @@ You can provide input arguments using command-line arguments or a configuration 
 You can create a JSON or YAML file to store the input arguments and default values for the program. This can make it easier for users to modify the settings without having to modify the code.
 
 To create a configuration file, create a file named config.json in your project directory with the following content:
+
 ```hs
--- Point-free style
 {
   "input_pdf_path": "path/to/input.pdf",
   "output_pdf_path": "path/to/output.pdf",
@@ -84,7 +83,6 @@ pdf_translator --input path/to/input.pdf --output path/to/output.pdf --model pat
 This will translate the input PDF document path/to/input.pdf to French (--target-language fr) using the pre-trained translation model path/to/translation_model.pt, CRAFT model path/to/craft_model.pt, and CRNN model path/to/crnn_model.pt, and save the translated PDF to path/to/output.pdf:
 
 ```hs
--- Point-free style
 pdf_translator --input path/to/input.pdf --output path/to/output.pdf --model path/to/translation_model.pt --craft-model path/to/craft_model.pt --crnn-model path/to/crnn_model.pt --target-language fr
 ```
 
@@ -117,7 +115,6 @@ This project is licensed under the MIT License. See the LICENSE file for details
 Set multiple lines of code in fenced code blocks.
 
 ```hs
--- Point-free style
 action: function(ctx) {
     workflow.check(!ctx.issue.isChanged('votes'), workflow.i18n('Voting for a resolved issue is not allowed.'));
 },
