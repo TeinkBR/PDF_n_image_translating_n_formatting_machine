@@ -125,7 +125,6 @@ action: function(ctx) {
 
 The following code block uses syntax highlighting for Haskell:
 ```hs
--- Point-free style
 fib :: Integer -> Integer
 fib = (fibs !!)
 where fibs = 0 : scanl (+) 1 fibs
