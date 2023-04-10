@@ -12,7 +12,7 @@ pip install pdf-translator
 '''
 
 # Install from source
-To install PDF Translator from source, you can clone the GitHub repository:
+# To install PDF Translator from source, you can clone the GitHub repository:
 
 ```hs
 git clone https://github.com/yourusername/pdf_translator.git
