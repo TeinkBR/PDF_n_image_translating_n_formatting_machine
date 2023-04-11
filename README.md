@@ -112,22 +112,5 @@ This notebook contains an example of how to use PDF Translator to translate a PD
 This project is licensed under the MIT License. See the LICENSE file for details.
 
 
-Set multiple lines of code in fenced code blocks.
 
-```hs
-action: function(ctx) {
-    workflow.check(!ctx.issue.isChanged('votes'), workflow.i18n('Voting for a resolved issue is not allowed.'));
-},
-```
 
-The following code block uses syntax highlighting for Haskell:
-```hs
-fib :: Integer -> Integer
-fib = (fibs !!)
-where fibs = 0 : scanl (+) 1 fibs
-
--- Explicit
-fib :: Integer -> Integer
-fib n = fibs !! n
-where fibs = 0 : scanl (+) 1 fibs
-```
